@@ -2,7 +2,7 @@
 ## Outline
 * Goal
     * 주기적으로 진행되는 배치 프로세스를 Airflow를 통해 자동화
-    * Docker Image를 생성하여 컨테이너로 관리
+    * Docker compose 를 생성하여 컨테이너로 관리
 
 
 

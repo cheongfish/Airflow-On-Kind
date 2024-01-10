@@ -32,13 +32,13 @@ default_args = {
 
 
     
-def _get_number(ti):
+def get_number(ti):
     res = randint(1,10)
     print(f"number is {res}")
     ti.xcom_push(key = 'res_number' , value = res)
     return res
     
-def _choose_num(ti):
+def choose_num(ti):
     print("choose num")
     res = ti.xcom_pull(key = 'res_number' , task_ids = [
         'choosing_num_a',
@@ -62,21 +62,21 @@ with DAG(
     with TaskGroup('choosing_numbers') as choosing_number:
         number_a = PythonOperator(
                 task_id = 'choosing_num_a',
-                python_callable=_get_number
+                python_callable=get_number
             )
         
         number_b = PythonOperator(
                 task_id = 'choosing_num_b',
-                python_callable=_get_number
+                python_callable=get_number
             )
         
         number_c = PythonOperator(
                 task_id = 'choosing_num_c',
-                python_callable=_get_number
+                python_callable=get_number
             )
     choose_number = PythonOperator(
         task_id = "task_4",
-        python_callable=_choose_num
+        python_callable=choose_num
     )
     
     dag_start >> choosing_number >> choose_number
