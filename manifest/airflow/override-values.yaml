@@ -1429,12 +1429,14 @@ webserver:
   webserverConfigConfigMapName: ~
 
   service:
-    type: ClusterIP
+    type: NodePort
     ## service annotations
     annotations: {}
     ports:
       - name: airflow-ui
         port: "{{ .Values.ports.airflowUI }}"
+        targetPort: 8080
+        nodePort: 31005
     # To change the port used to access the webserver:
     # ports:
     #   - name: airflow-ui
@@ -1981,7 +1983,7 @@ statsd:
   # Add custom annotations to the statsd configmap
   configMapAnnotations: {}
 
-  enabled: true
+  enabled: false
   # Max number of old replicasets to retain
   revisionHistoryLimit: ~
 
@@ -2584,37 +2586,30 @@ dags:
     # Annotations for dags PVC
     annotations: {}
     # Enable persistent volume for storing dags
-    enabled: false
+    enabled: true
     # Volume size for dags
-    size: 1Gi
-    # If using a custom storageClass, pass name here
-    storageClassName:
+    storageClassName: "local-storage"
     # access mode of the persistent volume
-    accessMode: ReadWriteOnce
+    accessMode: ReadWriteMany
     ## the name of an existing PVC to use
-    existingClaim:
-      - name: mount_dags
-        hostPath:
-          path: /mnt/worker # 경로  변경 필요
-          type: Directory
-    subPath: ~
+    existingClaim: "dag-pvc"
   gitSync:
     enabled: false
 
     # git repo clone url
     # ssh example: git@github.com:apache/airflow.git
     # https example: https://github.com/apache/airflow.git
-    repo: https://github.com/apache/airflow.git
-    branch: v2-2-stable
+    repo: <your git repo url>
+    branch: main
     rev: HEAD
     # The git revision (branch, tag, or hash) to check out, v4 only
-    ref: v2-2-stable
+    ref: main
     depth: 1
     # the number of consecutive failures allowed before aborting
     maxFailures: 0
     # subpath within the repo where dags are located
     # should be "" if dags are at repo root
-    subPath: "tests/dags"
+    subPath: ""
     # if your repo needs a user name password
     # you can load them to a k8s secret like the one below
     #   ---
@@ -2631,7 +2626,7 @@ dags:
     #     GITSYNC_PASSWORD: <base64_encoded_git_password>
     # and specify the name of the secret below
     #
-    # credentialsSecret: git-credentials
+    credentialsSecret: git-credentials
     #
     #
     # If you are using an ssh clone url, you can load
