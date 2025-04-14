@@ -5,23 +5,6 @@ nodes:
   - role: control-plane
     image: kindest/node:v1.29.12
     # add a mount from /path/to/my/files on the host to /files on the node
-    extraMounts:
-      - hostPath: /home/test/mnt/master-node
-        containerPath: /mnt/master
-        selinuxRelabel: false
-        # optional: set propagation mode (None, HostToContainer or Bidirectional)
-        # see https://kubernetes.io/docs/concepts/storage/volumes/#mount-propagation
-        # default None
-        #
-        # WARNING: You very likely do not need this field.
-        #
-        # This field controls propagation of *additional* mounts created
-        # *at runtime* underneath this mount.
-        #
-        # On MacOS with Docker Desktop, if the mount is from macOS and not the
-        # docker desktop VM, you cannot use this field. You can use it for
-        # mounts to the linux VM.
-        propagation: None
   - role: worker
     image: kindest/node:v1.29.12
     extraPortMappings:
@@ -61,8 +44,9 @@ nodes:
         # TCP is the default
         protocol: TCP
     extraMounts:
-      - hostPath: /home/test/mnt/worker-node
-        containerPath: /mnt/worker
+      # Mount host path with airflow dags
+      - hostPath: dags/
+        containerPath: /mnt/worker/dags
         selinuxRelabel: false
         # optional: set propagation mode (None, HostToContainer or Bidirectional)
         # see https://kubernetes.io/docs/concepts/storage/volumes/#mount-propagation
