@@ -2581,18 +2581,18 @@ podTemplate: ~
 dags:
   # Where dags volume will be mounted. Works for both persistence and gitSync.
   # If not specified, dags mount path will be set to $AIRFLOW_HOME/dags
-  mountPath:
+  mountPath: /opt/airflow/dags
   persistence:
     # Annotations for dags PVC
     annotations: {}
     # Enable persistent volume for storing dags
     enabled: true
     # Volume size for dags
-    storageClassName: "local-storage"
+    storageClassName: nfs-client
     # access mode of the persistent volume
     accessMode: ReadWriteMany
     ## the name of an existing PVC to use
-    existingClaim: "dag-pvc"
+    existingClaim: dag-pvc
   gitSync:
     enabled: false
 
