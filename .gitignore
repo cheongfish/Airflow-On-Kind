@@ -3,6 +3,8 @@ git-credentials.yaml
 # test for deploy values manifest
 /manifest/airflow/deploy-values.yaml
 
+# exclude nfs-server manifest
+manifest/*.yaml
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
