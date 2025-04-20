@@ -15,7 +15,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: manual
+  storageClassName: "standard"
   resources:
     requests:
       storage: 5Gi
@@ -30,7 +30,7 @@ spec:
     path: /mnt/worker/dags # Set Equal path in extraMounts in kind-cluster.yaml
   accessModes:
     - ReadWriteOnce
-  storageClassName: manual
+  storageClassName: "standard"
   capacity:
     storage: 5Gi
   nodeAffinity:

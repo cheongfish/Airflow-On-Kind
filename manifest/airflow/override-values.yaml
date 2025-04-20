@@ -264,7 +264,7 @@ rbac:
 
 # Airflow executor
 # One of: LocalExecutor, LocalKubernetesExecutor, CeleryExecutor, KubernetesExecutor, CeleryKubernetesExecutor
-executor: "KubernetesExecutor"
+executor: "LocalExecutor"
 
 # If this is true and using LocalExecutor/KubernetesExecutor/CeleryKubernetesExecutor, the scheduler's
 # service account will have access to communicate with the api-server and launch pods.
@@ -273,9 +273,13 @@ executor: "KubernetesExecutor"
 allowPodLaunching: true
 
 # Environment variables for all airflow containers
-env: []
-# - name: ""
-#   value: ""
+env:
+  # - name: PYTHONPATH
+  #   value: /home/airflow/.venv/lib/python3.9/site-packages:/opt/airflow/dags
+  # - name: VIRTUAL_ENV
+  #   value: /home/airflow/.venv
+  # - name: PATH
+  #   value: /home/airflow/.venv/bin:${PATH}
 
 # Volumes for all airflow containers
 volumes: []
@@ -915,8 +919,13 @@ scheduler:
   #     - name: my-templated-extra-volume
   #       mountPath: "{{ .Values.my_custom_path }}"
   #       readOnly: true
-  extraVolumes: []
-  extraVolumeMounts: []
+  extraVolumes:
+    - name: dag-volume
+      persistentVolumeClaim:
+        claimName: dag-pvc
+  extraVolumeMounts:
+    - name: dag-volume
+      mountPath: /opt/airflow/dags
 
   # Select certain nodes for airflow scheduler pods.
   nodeSelector: {}
@@ -1410,8 +1419,13 @@ webserver:
   #     - name: my-templated-extra-volume
   #       mountPath: "{{ .Values.my_custom_path }}"
   #       readOnly: true
-  extraVolumes: []
-  extraVolumeMounts: []
+  extraVolumes:
+    - name: dag-volume
+      persistentVolumeClaim:
+        claimName: dag-pvc
+  extraVolumeMounts:
+    - name: dag-volume
+      mountPath: /opt/airflow/dags
 
   # This string (can be templated) will be mounted into the Airflow Webserver
   # as a custom webserver_config.py. You can bake a webserver_config.py in to
@@ -1600,8 +1614,13 @@ triggerer:
   #     - name: my-templated-extra-volume
   #       mountPath: "{{ .Values.my_custom_path }}"
   #       readOnly: true
-  extraVolumes: []
-  extraVolumeMounts: []
+  extraVolumes:
+    - name: dag-volume
+      persistentVolumeClaim:
+        claimName: dag-pvc
+  extraVolumeMounts:
+    - name: dag-volume
+      mountPath: /opt/airflow/dags
 
   # Select certain nodes for airflow triggerer pods.
   nodeSelector: {}
@@ -2581,18 +2600,16 @@ podTemplate: ~
 dags:
   # Where dags volume will be mounted. Works for both persistence and gitSync.
   # If not specified, dags mount path will be set to $AIRFLOW_HOME/dags
-  mountPath: /opt/airflow/dags
+  mountPath: ""
   persistence:
     # Annotations for dags PVC
     annotations: {}
     # Enable persistent volume for storing dags
-    enabled: true
+    enabled: false
     # Volume size for dags
-    storageClassName: nfs-client
+    storageClassName: "standard"
     # access mode of the persistent volume
-    accessMode: ReadWriteMany
-    ## the name of an existing PVC to use
-    existingClaim: dag-pvc
+    accessMode: "ReadWriteOnce"
   gitSync:
     enabled: false
 
