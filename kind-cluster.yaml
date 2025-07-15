@@ -7,42 +7,6 @@ nodes:
     # add a mount from /path/to/my/files on the host to /files on the node
   - role: worker
     image: kindest/node:v1.29.12
-    extraPortMappings:
-      - containerPort: 31000
-        hostPort: 5050
-        protocol: TCP
-      - containerPort: 31001
-        hostPort: 5051
-        # optional: set the bind address on the host
-        # 0.0.0.0 is the current default
-        # optional: set the protocol to one of TCP, UDP, SCTP.
-        # TCP is the default
-        protocol: TCP
-      - containerPort: 31002
-        hostPort: 5052
-        # optional: set the bind address on the host
-        # 0.0.0.0 is the current default
-        # optional: set the protocol to one of TCP, UDP, SCTP.
-        # TCP is the default
-      - containerPort: 31003
-        hostPort: 5053
-        # optional: set the bind address on the host
-        # 0.0.0.0 is the current default
-        # optional: set the protocol to one of TCP, UDP, SCTP.
-        # TCP is the default
-      - containerPort: 31004
-        hostPort: 5054
-        # optional: set the bind address on the host
-        # 0.0.0.0 is the current default
-        # optional: set the protocol to one of TCP, UDP, SCTP.
-        # TCP is the default
-      - containerPort: 31005
-        hostPort: 5055
-        # optional: set the bind address on the host
-        # 0.0.0.0 is the current default
-        # optional: set the protocol to one of TCP, UDP, SCTP.
-        # TCP is the default
-        protocol: TCP
     extraMounts:
       # Mount host path with airflow dags
       - hostPath: dags/
