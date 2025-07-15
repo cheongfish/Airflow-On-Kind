@@ -117,21 +117,7 @@ helm install airflow -n airflow -f ./override-values.yaml . --debug
 ```
 
 ### 5. Access the Airflow Webserver & View DAGs
-* Make sure to define a `hostPort` in `kind-cluster.yaml` to expose the Airflow Webserver.
-* In your `override-values.yaml`, **`webserver.service.type` must be set to `NodePort`** in order to access the UI externally.
-
-Example configuration
-```yaml
-webserver:
-  service:
-    type: NodePort
-    annotations: {}
-    ports:
-      - name: airflow-ui
-        port: "{{ .Values.ports.airflowUI }}"
-        targetPort: 8080
-        nodePort: 31005
-```
+Once the webserver is up and running, you can access the Airflow UI. The method of access will depend on your Airflow Helm chart configuration (e.g., NodePort, LoadBalancer, Ingress).
 
 WebServer <br>
 ``Once the webserver is up and running, you can access the Airflow UI and expect to see a screen similar to the one below.``
