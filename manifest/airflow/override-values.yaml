@@ -96,8 +96,8 @@ images:
     # can be overridden in `config.kubernetes` section. So for these parameters to have effect
     # `config.kubernetes.worker_container_repository` and `config.kubernetes.worker_container_tag`
     # must be not set .
-    repository: ~
-    tag: ~
+    repository: custom_airflow
+    tag: 3.0.3_3.12
     pullPolicy: IfNotPresent
   flower:
     repository: ~
@@ -2953,7 +2953,7 @@ dags:
     # access mode of the persistent volume
     accessMode: ReadWriteOnce
     ## the name of an existing PVC to use
-    existingClaim: "dag-pvc"
+    existingClaim: "airflow-dags"
     ## optional subpath for dag volume mount
     subPath: ~
   gitSync:

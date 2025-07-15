@@ -28,6 +28,7 @@ metadata:
 spec:
   hostPath:
     path: /mnt/worker/dags # Set Equal path in extraMounts in kind-cluster.yaml
+    type: Directory
   accessModes:
     - ReadWriteOnce
   storageClassName: "standard"
