@@ -9,8 +9,8 @@ nodes:
     image: kindest/node:v1.29.12
     extraMounts:
       # Mount host path with airflow dags
-      - hostPath: dags/
-        containerPath: /mnt/worker/dags
+      - hostPath:
+        containerPath:
         selinuxRelabel: false
         # optional: set propagation mode (None, HostToContainer or Bidirectional)
         # see https://kubernetes.io/docs/concepts/storage/volumes/#mount-propagation
