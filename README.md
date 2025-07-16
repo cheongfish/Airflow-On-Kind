@@ -40,10 +40,18 @@ kubectl version --output=yaml
 ---
 
 ## How to Deploy
-### 1. Set Up Kind Cluster
-Create a local Kubernetes cluster using Kind
+
+You can deploy the Kind cluster and Airflow using the provided `Makefile` targets.
+
+### 1. Deploy Kind Cluster and Airflow
+This command will:
+- Create a Kind cluster with dynamic host path mounting for DAGs.
+- Create the `airflow` namespace.
+- Deploy the necessary PersistentVolume (PV) and PersistentVolumeClaim (PVC) for DAGs.
+- Install the Airflow Helm chart with the specified configurations.
+
 ```bash
-kind create cluster --name ${cluster_name} --config ./kind-cluster.yaml
+make all
 ```
 
 ### 1-1. Verify Docker Containers
@@ -58,17 +66,19 @@ CONTAINER ID   IMAGE                   COMMAND                  CREATED         
 0f8fa3aa1015   kindest/node:v1.29.12   "/usr/local/bin/entr…"   About a minute ago   Up About a minute   127.0.0.1:46309->6443/tcp                                                                                                                              test-control-plane
 ```
 
-### 2. Create Namespace for Airflow
-Set up a dedicated namespace for the Airflow deployment
+### 2. Access the Airflow Webserver & View DAGs
+Once the webserver is up and running, you can access the Airflow UI. The `make all` command will automatically port-forward the Airflow UI to `localhost:8080`.
+
+WebServer <br>
+``Once the webserver is up and running, you can access the Airflow UI and expect to see a screen similar to the one below.``
+![WebServer](image.png)
+
+### 3. Clean Up
+To remove the Airflow deployment and the Kind cluster:
 ```bash
-kubectl create ns airflow
+make clean-all
 ```
 
-### 3. Deploy Storage Class, PVC, and PV for DAGs
-This will mount a local directory into your cluster to store and manage DAG files:
-```bash
-kubectl apply -f local-pvc -n airflow
-```
 ### 3-1 Config Git Sync (Optional)
 If you want to use the dags folder from a Git repository, refer to the following manifest example.
 ```yaml
@@ -107,13 +117,6 @@ dags:
     # and specify the name of the secret below
     #
     credentialsSecret: git-credentials
-```
-
-### 4. Deploy the Airflow Helm Chart
-Change Directory to manifest/airflow  Install the Airflow chart using your custom configuration file
-```bash
-cd manifest/airflow
-helm install airflow -n airflow -f ./override-values.yaml . --debug
 ```
 
 ### 5. Access the Airflow Webserver & View DAGs
